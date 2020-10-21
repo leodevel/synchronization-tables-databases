@@ -110,6 +110,8 @@ public class JDDataSynchronize extends javax.swing.JDialog {
         txtName = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
         chkReprocessAll = new javax.swing.JCheckBox();
+        jLabel16 = new javax.swing.JLabel();
+        txtLimitRecords = new javax.swing.JSpinner();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Sincronizar tabelas");
@@ -377,6 +379,10 @@ public class JDDataSynchronize extends javax.swing.JDialog {
 
         chkReprocessAll.setText("Tudo");
 
+        jLabel16.setText("Limite de registros:");
+
+        txtLimitRecords.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -403,7 +409,11 @@ public class JDDataSynchronize extends javax.swing.JDialog {
                                         .addGroup(jPanel1Layout.createSequentialGroup()
                                             .addComponent(chkReplaceIfExist)
                                             .addGap(18, 18, 18)
-                                            .addComponent(chkStartImmediately)))))
+                                            .addComponent(chkStartImmediately))
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                            .addComponent(jLabel16)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(txtLimitRecords, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(45, 45, 45)
                                 .addComponent(jLabel15)
@@ -442,12 +452,16 @@ public class JDDataSynchronize extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel15)
-                            .addComponent(chkReprocessAll)))
+                            .addComponent(chkReprocessAll))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel16)
+                            .addComponent(txtLimitRecords, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btSalvar)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -609,6 +623,7 @@ public class JDDataSynchronize extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
@@ -634,6 +649,7 @@ public class JDDataSynchronize extends javax.swing.JDialog {
     private javax.swing.JPasswordField txtDataSourcePassword;
     private javax.swing.JTextField txtDataSourceUser;
     private javax.swing.JSpinner txtInterval;
+    private javax.swing.JSpinner txtLimitRecords;
     private javax.swing.JTextField txtName;
     private javax.swing.JTextField txtPrimaryKeyDestination;
     private javax.swing.JTextField txtPrimaryKeySource;
@@ -689,7 +705,8 @@ public class JDDataSynchronize extends javax.swing.JDialog {
         boolean startImmediately = chkStartImmediately.isSelected();
         boolean processAll = chkReprocessAll.isSelected();
         int interval = (int) txtInterval.getValue();
-
+        int limitRecords = (int) txtLimitRecords.getValue();
+        
         if (Utils.isNullOrEmpty(name)) {
             throw new Exception("Nome não informado.");
         }
@@ -737,6 +754,7 @@ public class JDDataSynchronize extends javax.swing.JDialog {
         ds.setInterval(interval);
         ds.setStartImmediately(startImmediately);
         ds.setProcessAll(processAll);
+        ds.setLimitRecords(limitRecords);
 
         return ds;
 
@@ -764,6 +782,8 @@ public class JDDataSynchronize extends javax.swing.JDialog {
         chkStartImmediately.setSelected(dataSynchronize.getStartImmediately() == null ? false : dataSynchronize.getStartImmediately());
         chkReprocessAll.setSelected(dataSynchronize.getProcessAll() == null ? false : dataSynchronize.getProcessAll());
         txtInterval.setValue(dataSynchronize.getInterval());
+        
+        txtLimitRecords.setValue(dataSynchronize.getLimitRecords() == null ? 1 : dataSynchronize.getLimitRecords());
 
         JComboBox<TableColumn> cbSource = new JComboBox<>();
         JComboBox<TableColumn> cbDestination = new JComboBox<>();

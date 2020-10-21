@@ -48,6 +48,8 @@ public class DataSynchronizeModule extends Thread {
 
                     } catch (Exception ex) {                        
 
+                        ex.printStackTrace();
+                        
                         if (ex.getMessage().startsWith("Violação da restrição PRIMARY KEY")
                                 && dataSynchronize.getReplaceIfExist()) {
 

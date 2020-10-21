@@ -100,6 +100,8 @@ public class DataSynchronizeService extends CrudService<DataSynchronize> {
                     where = "WHERE " + primaryKeys.get(0).getColumnName() + " > ?";
                 }
             }
+            
+            limit = "TOP " + (dataSynchronize.getLimitRecords() == null ? 1 : dataSynchronize.getLimitRecords());
 
         }
 
@@ -151,7 +153,7 @@ public class DataSynchronizeService extends CrudService<DataSynchronize> {
     public List<Map<String, Object>> getSelectBySource(DataSynchronize dataSynchronize) throws Exception {
 
         List<Map<String, Object>> list = new ArrayList<>();
-        String sql = getSelectSqlSource(dataSynchronize);
+        String sql = getSelectSqlSource(dataSynchronize);        
 
         try (Connection con = dataSynchronize.getSource().getConnection();
                 PreparedStatement prep = con.prepareStatement(sql)) {
@@ -192,7 +194,7 @@ public class DataSynchronizeService extends CrudService<DataSynchronize> {
             }
 
         }
-
+        
         return list;
 
     }
@@ -201,7 +203,7 @@ public class DataSynchronizeService extends CrudService<DataSynchronize> {
 
         String sql = getInsertSqlDestination(dataSynchronize);
 
-        try (Connection con = dataSynchronize.getSource().getConnection();
+        try (Connection con = dataSynchronize.getDestination().getConnection();
                 PreparedStatement prep = con.prepareStatement(sql)) {
 
             List<DataMapping> dataMapping = dataSynchronize

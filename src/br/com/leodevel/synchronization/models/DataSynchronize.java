@@ -25,6 +25,8 @@ public class DataSynchronize implements Entity {
     private Boolean processAll;
     private Integer qtdReprocess;
     
+    private Integer limitRecords;
+    
     private Object lastReading;
 
     public String getName() {
@@ -101,6 +103,14 @@ public class DataSynchronize implements Entity {
 
     public Integer getQtdReprocess() {
         return qtdReprocess;
+    }
+
+    public Integer getLimitRecords() {
+        return limitRecords;
+    }
+
+    public void setLimitRecords(Integer limitRecords) {
+        this.limitRecords = limitRecords;
     }
 
     public void setQtdReprocess(Integer qtdReprocess) {
