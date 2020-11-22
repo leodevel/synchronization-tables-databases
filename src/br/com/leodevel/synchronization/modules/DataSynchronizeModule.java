@@ -1,6 +1,7 @@
 package br.com.leodevel.synchronization.modules;
 
 import br.com.leodevel.synchronization.models.DataSynchronize;
+import br.com.leodevel.synchronization.models.LastReading;
 import br.com.leodevel.synchronization.services.DataSynchronizeService;
 import br.com.leodevel.synchronization.utils.Logs;
 import java.time.LocalDateTime;
@@ -12,10 +13,12 @@ import java.util.logging.Logger;
 public class DataSynchronizeModule extends Thread {
 
     private final DataSynchronize dataSynchronize;
+    private final LastReading lastReading;
     private boolean run;
 
     public DataSynchronizeModule(DataSynchronize dataSynchronize) {
         this.dataSynchronize = dataSynchronize;
+        lastReading = LastReading.getLastReading(dataSynchronize.getId());
         this.run = false;
     }
 
@@ -33,30 +36,30 @@ public class DataSynchronizeModule extends Thread {
             try {
 
                 List<Map<String, Object>> list = DataSynchronizeService.getInstance()
-                        .getSelectBySource(dataSynchronize);
+                        .getSelectBySource(dataSynchronize, lastReading);
 
                 for (Map<String, Object> row : list) {
 
                     try {
 
                         Object id = DataSynchronizeService.getInstance().insertToDestination(dataSynchronize, row);
-                        dataSynchronize.setLastReading(id);
-                        DataSynchronizeService.getInstance().update(dataSynchronize, dataSynchronize);
+                                                
+                        lastReading.setLastReading(id);
+                        LastReading.update(lastReading, dataSynchronize.getId());
                         
                         Logger.getLogger(DataSynchronizeModule.class.getName())
                                     .log(Level.INFO, "Inserido (id) = {0}", id);
 
                     } catch (Exception ex) {                        
-
-                        ex.printStackTrace();
                         
                         if (ex.getMessage().startsWith("Violação da restrição PRIMARY KEY")
                                 && dataSynchronize.getReplaceIfExist()) {
 
-                            Object id = DataSynchronizeService.getInstance().updateToDestination(dataSynchronize, row);
-                            dataSynchronize.setLastReading(id);
-                            DataSynchronizeService.getInstance().update(dataSynchronize, dataSynchronize);
+                            Object id = DataSynchronizeService.getInstance().updateToDestination(dataSynchronize, row);                                                        
 
+                            lastReading.setLastReading(id);
+                            LastReading.update(lastReading, dataSynchronize.getId());
+                                                        
                             Logger.getLogger(DataSynchronizeModule.class.getName())
                                     .log(Level.INFO, "Atualizado (id) = {0}", id);
                             

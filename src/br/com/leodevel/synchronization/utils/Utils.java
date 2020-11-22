@@ -1,13 +1,35 @@
 package br.com.leodevel.synchronization.utils;
 
 import br.com.leodevel.synchronization.enums.ColumnTypeEnum;
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 public class Utils {
+    
+    public static void createFileCofig(String filename, String text) {
+        File fileConfig = Paths.get(filename).toFile();
+
+        if (!fileConfig.getParentFile().exists()) {
+            fileConfig.getParentFile().mkdirs();
+        }
+
+        if (!fileConfig.exists()) {
+            try {
+                fileConfig.createNewFile();
+                Files.write(fileConfig.toPath(), text.getBytes(),
+                        StandardOpenOption.WRITE);
+            } catch (IOException ex1) {
+            }
+        }
+    }
 
     public static String toMD5(String password) {
         try {

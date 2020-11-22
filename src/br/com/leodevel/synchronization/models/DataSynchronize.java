@@ -27,7 +27,7 @@ public class DataSynchronize implements Entity {
     
     private Integer limitRecords;
     
-    private Object lastReading;
+    //private Object lastReading;
 
     public String getName() {
         return name;
@@ -117,13 +117,13 @@ public class DataSynchronize implements Entity {
         this.qtdReprocess = qtdReprocess;
     }
 
-    public Object getLastReading() {
+/*    public Object getLastReading() {
         return lastReading;
     }
 
     public void setLastReading(Object lastReading) {
         this.lastReading = lastReading;
-    }    
+    }    */
 
     public List<TableColumn> getAllColumnsSource() {
         return allColumnsSource;

@@ -1,6 +1,7 @@
 package br.com.leodevel.synchronization;
 
 import br.com.leodevel.synchronization.models.DataSynchronize;
+import br.com.leodevel.synchronization.models.LastReading;
 import br.com.leodevel.synchronization.modules.DataSynchronizeModule;
 import br.com.leodevel.synchronization.services.DataSynchronizeService;
 import java.awt.Desktop;
@@ -137,6 +138,11 @@ public class JPDataSynchronize extends javax.swing.JPanel {
             File log = Paths.get("logs/data_synchronize_" + dataSynchronize.getId() + ".log").toFile();
             if (log.exists()) {
                 log.delete();
+            }
+            
+            File lastReading = Paths.get(LastReading.getFile(dataSynchronize.getId())).toFile();
+            if (lastReading.exists()) {
+                lastReading.delete();
             }
 
             jfMain.removeDataSynchronize(dataSynchronize);

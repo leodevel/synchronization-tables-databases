@@ -570,7 +570,6 @@ public class JDDataSynchronize extends javax.swing.JDialog {
             } else {
 
                 ds.setId(this.dataSynchronize.getId());
-                ds.setLastReading(this.dataSynchronize.getLastReading());
                 ds.setAllColumnsSource(allColumnsSource != null ? allColumnsSource.stream().map(c -> c.copy()).collect(Collectors.toList())
                         : this.dataSynchronize.getAllColumnsSource().stream().map(c -> c.copy()).collect(Collectors.toList()));
                 ds.setAllColumnsDestination(allColumnsDestination != null ? allColumnsDestination.stream().map(c -> c.copy()).collect(Collectors.toList())

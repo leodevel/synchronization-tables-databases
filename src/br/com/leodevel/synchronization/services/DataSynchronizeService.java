@@ -4,6 +4,7 @@ import br.com.leodevel.synchronization.enums.ColumnTypeEnum;
 import br.com.leodevel.synchronization.models.Column;
 import br.com.leodevel.synchronization.models.DataMapping;
 import br.com.leodevel.synchronization.models.DataSynchronize;
+import br.com.leodevel.synchronization.models.LastReading;
 import br.com.leodevel.synchronization.models.TableColumn;
 import br.com.leodevel.synchronization.shared.CrudService;
 import br.com.leodevel.synchronization.utils.Utils;
@@ -79,7 +80,8 @@ public class DataSynchronizeService extends CrudService<DataSynchronize> {
         return columns;
     }
 
-    public String getSelectSqlSource(DataSynchronize dataSynchronize) {
+    public String getSelectSqlSource(DataSynchronize dataSynchronize,
+            LastReading lastReading) {
 
         String where = "";
         String order = "";
@@ -96,7 +98,7 @@ public class DataSynchronizeService extends CrudService<DataSynchronize> {
 
             if (primaryKeys.size() == 1) {
                 order = "ORDER BY " + primaryKeys.get(0).getColumnName() + " ASC";
-                if (dataSynchronize.getLastReading() != null) {
+                if (lastReading.getLastReading() != null) {
                     where = "WHERE " + primaryKeys.get(0).getColumnName() + " > ?";
                 }
             }
@@ -150,10 +152,11 @@ public class DataSynchronizeService extends CrudService<DataSynchronize> {
 
     }
 
-    public List<Map<String, Object>> getSelectBySource(DataSynchronize dataSynchronize) throws Exception {
+    public List<Map<String, Object>> getSelectBySource(DataSynchronize dataSynchronize,
+            LastReading lastReading) throws Exception {
 
         List<Map<String, Object>> list = new ArrayList<>();
-        String sql = getSelectSqlSource(dataSynchronize);        
+        String sql = getSelectSqlSource(dataSynchronize, lastReading);        
 
         try (Connection con = dataSynchronize.getSource().getConnection();
                 PreparedStatement prep = con.prepareStatement(sql)) {
@@ -165,8 +168,8 @@ public class DataSynchronizeService extends CrudService<DataSynchronize> {
                         .filter(dm -> dm.getPrimaryKey())
                         .collect(Collectors.toList());
                 if (primaryKeys.size() == 1) {
-                    if (dataSynchronize.getLastReading() != null) {
-                        prep.setObject(1, dataSynchronize.getLastReading());
+                    if (lastReading.getLastReading() != null) {
+                        prep.setObject(1, lastReading.getLastReading());
                     }
                 }
             }
